@@ -83,19 +83,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
         // 1. 校验
         if (StrUtil.isAllBlank(userAccount, userPassword)) {
-            throw new BusinessException(ResponseCode.PARAMS_ERROR, "参数为空");
+            throw new BusinessException(ResponseCode.NOT_LOGIN, "参数为空");
         }
         if (userAccount.length() < 4 || userAccount.length() > 20) {
-            throw new BusinessException(ResponseCode.PARAMS_ERROR, "账号至少是4到20位");
+            throw new BusinessException(ResponseCode.NOT_LOGIN, "账号至少是4到20位");
         }
         if (userPassword.length() < 8 || userPassword.length() > 20) {
-            throw new BusinessException(ResponseCode.PARAMS_ERROR, "密码至少是8到20位");
+            throw new BusinessException(ResponseCode.NOT_LOGIN, "密码至少是8到20位");
         }
 
         // 账户不能包含特殊字符,只允许字母和数字 下划线
         String pattern = "^[a-zA-Z0-9_]+$";
         if (!Pattern.matches(pattern, userAccount)) {
-            throw new BusinessException(ResponseCode.PARAMS_ERROR, "账户只能包含字母数字下划线");
+            throw new BusinessException(ResponseCode.NOT_LOGIN, "账户只能包含字母数字下划线");
         }
 
         // 2. 加密
@@ -109,7 +109,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
         if (user == null) {
             log.info("user login failed, userAccount cannot match userPassword");
-            throw new BusinessException(ResponseCode.PARAMS_ERROR, "账户或密码错误");
+            throw new BusinessException(ResponseCode.NOT_LOGIN, "账户或密码错误");
         }
 
         // 3. 用户脱敏
